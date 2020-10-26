@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "218648578880",
+    "firebase_url": "https://mafalda-19bd1.firebaseio.com",
+    "project_id": "mafalda-19bd1",
+    "storage_bucket": "mafalda-19bd1.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:218648578880:android:eb6121b9eab554a430c8a5",
+        "android_client_info": {
+          "package_name": "com.project.mafalda"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "218648578880-ab13asf5ehoruqpnj96c0hgsv4cpjbun.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.project.mafalda",
+            "certificate_hash": "932778480f72911262b7dacfb924f5a59c628832"
+          }
+        },
+        {
+          "client_id": "218648578880-921lfbqpsap108v56ioeufbaotegd16n.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD7nUXs3VZhgqedLkhYkVJbFpx3-UnKYPM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "218648578880-921lfbqpsap108v56ioeufbaotegd16n.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
