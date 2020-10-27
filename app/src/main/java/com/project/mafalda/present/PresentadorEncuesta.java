@@ -31,16 +31,16 @@ public class PresentadorEncuesta implements PresentEncuestaInterface {
     }
 
     @Override
-    public void vista(Encuesta encuesta) {
+    public void vista(Encuesta encuesta,ArrayList<Imagen> imagenes) {
         if(vista!=null){
-            vista.vista(encuesta);
+            vista.vista(encuesta,imagenes);
         }
     }
 
     @Override
-    public void respuesta(Context context, String nombre, String respuesta,String url_image) {
+    public void respuesta(Context context, String nombre, String respuesta,Imagen imagen) {
         if(vista!=null){
-            encuesta.respuesta(context,nombre,respuesta,url_image);
+            encuesta.respuesta(context,nombre,respuesta,imagen);
         }
     }
 

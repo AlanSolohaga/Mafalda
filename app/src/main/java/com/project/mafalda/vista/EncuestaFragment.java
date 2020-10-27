@@ -26,6 +26,8 @@ import com.project.mafalda.model.Imagen;
 import com.project.mafalda.model.SonidoClick;
 import com.project.mafalda.model.User;
 import com.project.mafalda.present.PresentadorEncuesta;
+import com.project.mafalda.utilidades.Utilidades;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
@@ -80,7 +82,6 @@ public class EncuestaFragment extends Fragment implements VistaEncuestaInterface
     View view;
     TextView txtpregunta;
     ImageView imagen;
-    String url_imagen;
     int cont_imagen;
     RecyclerView recycleropciones;
     AdaptadorEncuesta adaptador;
@@ -108,37 +109,38 @@ public class EncuestaFragment extends Fragment implements VistaEncuestaInterface
     }
 
     @Override
-    public void vista(final Encuesta encuesta) {
+    public void vista(final Encuesta encuesta, final ArrayList<Imagen> imagenes) {
         txtpregunta.setText(encuesta.getPregunta());
         adaptador = new AdaptadorEncuesta(encuesta.getOpciones());
         recycleropciones.setAdapter(adaptador);
+        mostrarImagen(imagenes.get(cont_imagen));
         adaptador.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 SonidoClick.getInstance(getContext()).play();
 
                 //       CAMBIAR NOMBRE DE LA ENCUESTA POR EL ID!!!!!
-/*
-                presentador.respuesta(getContext(),encuesta.getID(),encuesta.getOpciones()
-                        .get(recycleropciones.getChildAdapterPosition(v)),url_imagen);
-*/
-/*
-                cont_imagen++;
 
-                Log.e("IMAGEN!!!",url_imagen);
-                presentador.siguienteImagen(getContext(),encuesta.getID(),cont_imagen);
-*/
+                presentador.respuesta(getContext(),encuesta.getID(),encuesta.getOpciones()
+                        .get(recycleropciones.getChildAdapterPosition(v)),imagenes.get(cont_imagen));
+
+            cont_imagen++;
+            if(cont_imagen<imagenes.size()){
+                mostrarImagen(imagenes.get(cont_imagen));
+            }else{
+                cont_imagen = cont_imagen- cont_imagen;
+                //HACER UNA NUEVA PETICIÓN
+                mostrarImagen(imagenes.get(cont_imagen));
+            }
+
             }
         });
 
     }
-
+    Utilidades uti = new Utilidades();
     @Override
     public void mostrarImagen(Imagen imagenes) {
-        url_imagen = "";
-        url_imagen = imagenes.getUrl();
-        imagen.setImageBitmap(imagenes.getImagen());
-
+        Picasso.with(getContext()).load(uti.DOMINIO+imagenes.getUrl()).into(imagen);
     }
 
     @Override

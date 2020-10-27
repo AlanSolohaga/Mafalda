@@ -10,9 +10,9 @@ import java.util.ArrayList;
 
 public interface PresentEncuestaInterface {
     void cargarVista(String nombre, Context context);
-    void vista(Encuesta encuesta);
+    void vista(Encuesta encuesta,ArrayList<Imagen> imagenes);
 
-    void respuesta(Context context,String nombre, String respuesta,String url_imagen);
+    void respuesta(Context context,String nombre, String respuesta,Imagen imagen);
     void mostrarImagen(Imagen imagen);
     void mostrarImagen(Bitmap imagen);
 

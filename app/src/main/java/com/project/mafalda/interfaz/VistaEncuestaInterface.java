@@ -8,7 +8,7 @@ import com.project.mafalda.model.Imagen;
 import java.util.ArrayList;
 
 public interface VistaEncuestaInterface {
-    void vista(Encuesta encuesta);
+    void vista(Encuesta encuesta,ArrayList<Imagen> imagenes);
     void mostrarImagen(Imagen imagen);
     void mostrarImagen(Bitmap imagen);
     void error(String error);

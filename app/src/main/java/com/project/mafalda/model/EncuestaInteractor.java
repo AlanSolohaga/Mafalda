@@ -77,7 +77,8 @@ public class EncuestaInteractor implements EncuestaInterface, Response.ErrorList
                             );
 
                             obtenerImagen(encuesta,context);
-                            presentador.vista(encuesta);
+                            //presentador.vista(encuesta);
+
                         }
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -98,6 +99,67 @@ public class EncuestaInteractor implements EncuestaInterface, Response.ErrorList
         MySingleton.getInstance(context).addToreques(arrayRequest);
     }
 
+    private void obtenerImagen(final Encuesta encuesta, final Context context) {
+        JsonObjectRequest arrayRequest = new JsonObjectRequest(Request.Method.GET, uti.SQL+"/"+encuesta.getID(), null, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                Log.e("JSON SHOW:",response.toString());
+                JSONArray json = response.optJSONArray("images_data");
+                ArrayList<Imagen> imagenes = new ArrayList<>();
+                for (int i = 0; i <json.length() ; i++) {
+
+                    try {
+                        final String url = json.getJSONObject(i).optString("image_url");
+                        int id_imagen = json.getJSONObject(i).getJSONObject("image").optInt("id");
+                        Log.e("ID IMAGEN "+i, ""+id_imagen);
+                        Imagen imagen = new Imagen();
+                        imagen.setId(id_imagen);
+                        imagen.setUrl(url);
+                        imagenes.add(imagen);
+
+                    }catch (Exception e){
+                        e.printStackTrace();
+                    }
+
+                }
+                presentador.vista(encuesta,imagenes);
+            }
+        },this){
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String,String> head = new HashMap<>();
+                head.put("Content-Type","application/json");
+                head.put("Authorization",User.getInstance().getTOKEN());
+                return head;
+
+            }
+        };
+        MySingleton.getInstance(context).addToreques(arrayRequest);
+
+    }
+/*
+    private Imagen getImagen(final String url,Context context){
+        final Imagen imagen = new Imagen();
+        ImageRequest imageRequest = new ImageRequest(uti.DOMINIO+url, new Response.Listener<Bitmap>() {
+            @Override
+            public void onResponse(Bitmap response) {
+                imagen.setUrl(url);
+                imagen.setImagen(response);
+
+            }
+        }, 0, 0, ImageView.ScaleType.CENTER, null, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.e("ERROR obtenerImagen(): ",error.toString());
+            }
+        });
+
+        MySingleton.getInstance(context).addToreques(imageRequest);
+        return imagen;
+    }
+
+ */
+/*
     private void obtenerImagen(final Encuesta encuesta, final Context context) {
         JsonObjectRequest arrayRequest = new JsonObjectRequest(Request.Method.GET, uti.SQL+"/"+encuesta.getID(), null, new Response.Listener<JSONObject>() {
             @Override
@@ -143,6 +205,9 @@ public class EncuestaInteractor implements EncuestaInterface, Response.ErrorList
         MySingleton.getInstance(context).addToreques(arrayRequest);
 
     }
+*/
+
+
     @Override
     public void siguienteImagen(final Context context, String id, final int cont_imagen) {
         JsonObjectRequest arrayRequest = new JsonObjectRequest(Request.Method.GET, uti.SQL+"/"+id, null, new Response.Listener<JSONObject>() {
@@ -194,26 +259,89 @@ public class EncuestaInteractor implements EncuestaInterface, Response.ErrorList
 
     }
 
+
+/*
+    private ArrayList<Imagen> getImagenes(int encuesta_ID, final Context context){
+        final ArrayList<Imagen> imagenes = new ArrayList<>();
+
+        JsonObjectRequest arrayRequest = new JsonObjectRequest(Request.Method.GET, uti.SQL+"/"+encuesta_ID, null, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                Log.e("JSON SHOW:",response.toString());
+                JSONArray json = response.optJSONArray("images_data");
+
+                try {
+
+                    for (int i = 0; i < json.length() ; i++) {
+                        final String url = json.getJSONObject(i).optString("image_url");
+                        imagenes.add(getImagen(url,context));
+                    }
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+            }
+        },this){
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String,String> head = new HashMap<>();
+                head.put("Content-Type","application/json");
+                head.put("Authorization",User.getInstance().getTOKEN());
+                return head;
+
+            }
+        };
+        MySingleton.getInstance(context).addToreques(arrayRequest);
+
+        return imagenes;
+    }
+
+    private Imagen getImagen(final String url,Context context){
+        final Imagen imagen = new Imagen();
+
+        ImageRequest imageRequest = new ImageRequest(uti.DOMINIO+url, new Response.Listener<Bitmap>() {
+            @Override
+            public void onResponse(Bitmap response) {
+                imagen.setUrl(url);
+                imagen.setImagen(response);
+
+            }
+        }, 0, 0, ImageView.ScaleType.CENTER, null, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.e("ERROR VOLLEY: ",error.toString());
+
+            }
+        });
+
+        MySingleton.getInstance(context).addToreques(imageRequest);
+
+        return imagen;
+    }
+
+ */
+
     @Override
     public void onErrorResponse(VolleyError error) {
         Log.e("ERROR AQUI:",error.toString());
     }
 
     @Override
-    public void respuesta(final Context context, String nombre, final String respuesta,String url_image) {
+    public void respuesta(final Context context, String nombre, final String respuesta,Imagen imagen) {
 
         //id="102540464229170067169"
 
         final String datos = "{\n" +
                 "   \"answer\":{\n" +
                 "      \"answer\":\""+respuesta+"\",\n" +
-                "      \"image\":\""+url_image+"\",\n" +
+                "      \"image_id\":\""+imagen.getId()+"\",\n" +
+                "      \"image\":\""+imagen.getUrl()+"\",\n" +
                 "      \"user_uid\":\" "+User.getInstance().getID()+"\",\n" +
                 "      \"quiz_id\": "+Integer.parseInt(nombre)+"\n" +
                 "   }\n" +
                 "}";
 
         Log.e("JSON FORMADO:",datos);
+
         try {
             JSONObject json = new JSONObject(datos);
 
@@ -246,6 +374,8 @@ public class EncuestaInteractor implements EncuestaInterface, Response.ErrorList
         } catch (JSONException e) {
             e.printStackTrace();
         }
+
+
     }
 
 
