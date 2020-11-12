@@ -13,6 +13,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -23,6 +24,7 @@ import com.project.mafalda.interfaz.PresentEncuestaInterface;
 import com.project.mafalda.interfaz.VistaEncuestaInterface;
 import com.project.mafalda.model.Encuesta;
 import com.project.mafalda.model.Imagen;
+import com.project.mafalda.model.Loading;
 import com.project.mafalda.model.SonidoClick;
 import com.project.mafalda.model.User;
 import com.project.mafalda.present.PresentadorEncuesta;
@@ -85,6 +87,7 @@ public class EncuestaFragment extends Fragment implements VistaEncuestaInterface
     int cont_imagen;
     RecyclerView recycleropciones;
     AdaptadorEncuesta adaptador;
+    Loading loading;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -102,37 +105,39 @@ public class EncuestaFragment extends Fragment implements VistaEncuestaInterface
         /**Atributos recibidos del fragment menu para listar opciones e imagenes */
         Bundle objRecibido = getArguments();
         String nombre = objRecibido.getString("nombre");
-
+        loading = new Loading(getActivity());
+        loading.starDialog();
         presentador.cargarVista(nombre,getContext());
 
         return view;
     }
 
     @Override
-    public void vista(final Encuesta encuesta, final ArrayList<Imagen> imagenes) {
+    public void vista(final Encuesta encuesta, final ArrayList<Imagen> imagenes, final String link) {
         txtpregunta.setText(encuesta.getPregunta());
         adaptador = new AdaptadorEncuesta(encuesta.getOpciones());
         recycleropciones.setAdapter(adaptador);
         mostrarImagen(imagenes.get(cont_imagen));
+
         adaptador.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 SonidoClick.getInstance(getContext()).play();
-
                 //       CAMBIAR NOMBRE DE LA ENCUESTA POR EL ID!!!!!
-
                 presentador.respuesta(getContext(),encuesta.getID(),encuesta.getOpciones()
                         .get(recycleropciones.getChildAdapterPosition(v)),imagenes.get(cont_imagen));
-
+            
             cont_imagen++;
             if(cont_imagen<imagenes.size()){
                 mostrarImagen(imagenes.get(cont_imagen));
             }else{
+                loading.starDialog();
                 cont_imagen = cont_imagen- cont_imagen;
+                Log.e("CONTADOR",""+cont_imagen);
                 //HACER UNA NUEVA PETICIÓN
-                mostrarImagen(imagenes.get(cont_imagen));
+                presentador.siguienteImagen(getContext(),encuesta,link);
+                //mostrarImagen(imagenes.get(cont_imagen));
             }
-
             }
         });
 
@@ -141,6 +146,7 @@ public class EncuestaFragment extends Fragment implements VistaEncuestaInterface
     @Override
     public void mostrarImagen(Imagen imagenes) {
         Picasso.with(getContext()).load(uti.DOMINIO+imagenes.getUrl()).into(imagen);
+        loading.dismissDialog();
     }
 
     @Override
@@ -150,6 +156,7 @@ public class EncuestaFragment extends Fragment implements VistaEncuestaInterface
 
     @Override
     public void error(String error) {
+        loading.dismissDialog();
         Toast.makeText(getContext(), ""+error, Toast.LENGTH_LONG).show();
     }
 

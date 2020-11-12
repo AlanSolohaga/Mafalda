@@ -6,6 +6,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.project.mafalda.R;
@@ -19,6 +20,7 @@ public class AdaptadorEncuesta extends RecyclerView.Adapter<AdaptadorEncuesta.Vi
 
     View.OnClickListener listener;
     List<String> opciones;
+
 
     public AdaptadorEncuesta(List<String> opciones) {
         this.opciones = opciones;
@@ -36,6 +38,7 @@ public class AdaptadorEncuesta extends RecyclerView.Adapter<AdaptadorEncuesta.Vi
     @Override
     public void onBindViewHolder(@NonNull ViewHolderEncuesta holder, int position) {
         holder.txtOpcion.setText(opciones.get(position));
+
     }
 
     @Override
@@ -57,9 +60,11 @@ public class AdaptadorEncuesta extends RecyclerView.Adapter<AdaptadorEncuesta.Vi
 
     public class ViewHolderEncuesta extends RecyclerView.ViewHolder {
         TextView txtOpcion;
+        CardView cardOpcion;
         public ViewHolderEncuesta(@NonNull View itemView) {
             super(itemView);
             txtOpcion = itemView.findViewById(R.id.txtOpcion);
+            cardOpcion = itemView.findViewById(R.id.cardOpcion);
         }
     }
 }

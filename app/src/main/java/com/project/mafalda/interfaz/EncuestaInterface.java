@@ -8,5 +8,5 @@ import com.project.mafalda.model.Imagen;
 public interface EncuestaInterface {
     void cargarVista(String nombre, Context context);
     void respuesta(Context context, String nombre, String respuesta, Imagen imagen);
-    void siguienteImagen(Context context, String id,int cont_imagen);
+    void siguienteImagen(Context context, Encuesta encuesta,String link);
 }

@@ -91,6 +91,9 @@ public class MainActivity extends AppCompatActivity implements  ComunicaFragment
             User.getInstance().setUsuario(account.getGivenName());
             User.getInstance().setID(account.getId());
 
+            Log.e("ID Cuenta: ",""+account.getId());
+            Log.e("ID User: ",User.getInstance().getID());
+
             /**GENERO EL TOKEN PARA PODER PASARLO AL HEADER DE LOS RESPONS*/
             String compactJws = Jwts.builder()
                     .setSubject(""+User.getInstance().getID())
@@ -169,4 +172,5 @@ public class MainActivity extends AppCompatActivity implements  ComunicaFragment
             finish();
         }
     }
+
 }

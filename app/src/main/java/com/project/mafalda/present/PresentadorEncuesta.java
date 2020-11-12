@@ -31,9 +31,9 @@ public class PresentadorEncuesta implements PresentEncuestaInterface {
     }
 
     @Override
-    public void vista(Encuesta encuesta,ArrayList<Imagen> imagenes) {
+    public void vista(Encuesta encuesta,ArrayList<Imagen> imagenes,String cabecera) {
         if(vista!=null){
-            vista.vista(encuesta,imagenes);
+            vista.vista(encuesta,imagenes,cabecera);
         }
     }
 
@@ -59,9 +59,9 @@ public class PresentadorEncuesta implements PresentEncuestaInterface {
     }
 
     @Override
-    public void siguienteImagen(Context context, String id,int cont_imagen) {
+    public void siguienteImagen(Context context, Encuesta encuest,String link) {
         if(vista!=null){
-            encuesta.siguienteImagen(context,id,cont_imagen);
+            encuesta.siguienteImagen(context,encuest,link);
         }
     }
 
