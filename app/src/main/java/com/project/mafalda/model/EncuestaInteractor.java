@@ -349,6 +349,7 @@ public class EncuestaInteractor implements EncuestaInterface, Response.ErrorList
             MySingleton.getInstance(context).addToreques(jsonObjectRequest);
         } catch (JSONException e) {
             e.printStackTrace();
+
         }
 
     }
